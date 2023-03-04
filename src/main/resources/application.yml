@@ -16,9 +16,4 @@ spring:
 server:
   error:
     include-stacktrace: never
-
-application:
-  security:
-    jwt:
-      public_key: classpath:keys/app.pub
-      private_key: classpath:keys/app.key
+debug: true

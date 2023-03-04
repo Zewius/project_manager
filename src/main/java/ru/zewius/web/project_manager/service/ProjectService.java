@@ -10,7 +10,7 @@ import ru.zewius.web.project_manager.repository.ProjectRepository;
 
 import java.util.List;
 
-// TODO: Необходим ли здесь @Transactional?
+// TODO: Подумать над тем, стоит ли сюда вешать Method Security
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;

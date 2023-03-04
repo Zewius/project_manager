@@ -8,6 +8,7 @@ import org.hibernate.Hibernate;
 import java.util.Date;
 import java.util.Objects;
 
+// TODO: Реализовать логику, где у каждой задачи будет свой создатель, который сможет удалять и изменять задачу.
 @Getter
 @Setter
 @RequiredArgsConstructor

@@ -1,7 +1,7 @@
-package ru.zewius.web.project_manager.domain;
+package ru.zewius.web.project_manager.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record NewProject(@NotBlank String name,
+public record ProjectDTO(@NotBlank String name,
                          String description) {
 }

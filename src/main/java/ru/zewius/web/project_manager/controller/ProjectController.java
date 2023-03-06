@@ -1,10 +1,10 @@
 package ru.zewius.web.project_manager.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.zewius.web.project_manager.domain.NewProject;
-import ru.zewius.web.project_manager.domain.UpdateProject;
+import ru.zewius.web.project_manager.dto.ProjectDTO;
 import ru.zewius.web.project_manager.entity.Project;
 import ru.zewius.web.project_manager.service.ProjectService;
 
@@ -20,13 +20,9 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    //TODO: Завести глобальный обработчик исключений для данного случая
     @GetMapping(path = "/projects")
     public List<Project> getProjects(@RequestParam(defaultValue = "false") boolean onlyParents) {
-        if (onlyParents) {
-            return projectService.getParentProjects();
-        }
-        return projectService.getAllProjects();
+        return projectService.getAllProjects(onlyParents);
     }
 
     @GetMapping(path = "/project/{id}")
@@ -36,18 +32,18 @@ public class ProjectController {
 
     @PostMapping(path = "/projects")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Project createProject(@RequestBody NewProject newProject) {
+    public Project createProject(@Valid @RequestBody ProjectDTO newProject) {
         return projectService.createProject(newProject);
     }
 
     @PostMapping(path = "/project/{id}")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Project createSubProject(@PathVariable Long id, @RequestBody NewProject newProject) {
+    public Project createSubProject(@PathVariable Long id, @Valid @RequestBody ProjectDTO newProject) {
         return projectService.createSubProject(id, newProject);
     }
 
     @PutMapping(path = "/project/{id}")
-    public Project updateProjectInfo(@PathVariable Long id, @RequestBody UpdateProject updateProject) {
+    public Project updateProjectInfo(@PathVariable Long id, @Valid @RequestBody ProjectDTO updateProject) {
         return projectService.updateProjectInfo(id, updateProject);
     }
 

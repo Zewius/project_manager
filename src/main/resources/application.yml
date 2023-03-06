@@ -7,13 +7,13 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create
-  h2:
-    console:
-      enabled: true
+      ddl-auto: update
+  sql:
+    init:
+      mode: never
   banner:
     location: application_banner.txt
 server:
   error:
     include-stacktrace: never
-debug: true
+    include-binding-errors: never

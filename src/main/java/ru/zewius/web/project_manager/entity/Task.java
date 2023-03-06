@@ -8,23 +8,20 @@ import org.hibernate.Hibernate;
 import java.util.Date;
 import java.util.Objects;
 
-// TODO: Реализовать логику, где у каждой задачи будет свой создатель, который сможет удалять и изменять задачу.
 @Getter
 @Setter
 @RequiredArgsConstructor
 @Entity
 @Table(name = "tasks")
 public class Task {
-    public enum TaskPurpose {
-        MANAGER, TECHNICIAN
-    }
 
     public enum TaskStatus {
         NEW, PROGRESS, DONE
     }
 
-    public Task(String name, TaskPurpose purpose, Project project, String additionalInfo) {
+    public Task(String name, User user, Role purpose, Project project, String additionalInfo) {
         this.name = name;
+        this.createdBy = user;
         this.purpose = purpose;
         this.project = project;
         this.additionalInfo = additionalInfo;
@@ -38,20 +35,24 @@ public class Task {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "purpose", nullable = false)
-    private TaskPurpose purpose;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private TaskStatus status;
+    @ManyToOne(targetEntity = User.class, cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "created_by_user_id")
+    private User createdBy;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
     private Date createDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "purpose", nullable = false)
+    private Role purpose;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private TaskStatus status;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "status_change_date")
@@ -59,12 +60,12 @@ public class Task {
 
     @JsonIgnore
     @ToString.Exclude
-    @ManyToOne(optional = false)
+    @ManyToOne(targetEntity = Project.class, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-    // TODO: Скорее всего, в данное поле будут записывать текст больше 255 символов, поэтому тип данных в БД должен быть text
     @Column(name = "additional_info")
+    @Lob
     private String additionalInfo;
 
     public void setStatus(TaskStatus status) {

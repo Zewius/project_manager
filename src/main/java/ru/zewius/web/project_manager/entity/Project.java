@@ -32,7 +32,7 @@ public class Project {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     @Column(name = "description")
@@ -40,13 +40,14 @@ public class Project {
 
     @JsonIgnore
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne(targetEntity = Project.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_project_id")
     private Project parentProject;
 
     @OneToMany(targetEntity = Project.class, mappedBy = "parentProject", fetch = FetchType.EAGER)
     private List<Project> subProjects;
 
+    @JsonIgnore
     @OneToMany(targetEntity = Task.class, mappedBy = "project", fetch = FetchType.EAGER)
     private List<Task> tasks;
 
